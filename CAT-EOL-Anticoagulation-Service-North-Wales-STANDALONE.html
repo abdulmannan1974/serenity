@@ -215,10 +215,10 @@ table.t td{padding:9px 10px;line-height:1.4}
 .vflow{position:relative;padding-right:46px;display:flex;flex-direction:column}
 .vstep{border-radius:10px;border:1.5px solid var(--line);padding:7px 14px;font-size:15px;line-height:1.32;display:flex;flex-direction:column;gap:1px}
 .vstep.a-step,.vstep.a-stop,.vstep.a-agent{color:var(--ink)}
-.varrow{height:13px;position:relative}
-.varrow::before{content:"";position:absolute;left:50%;top:1px;bottom:5px;border-left:2px solid var(--ink-3)}
-.varrow::after{content:"";position:absolute;left:calc(50% - 5px);bottom:0;border:5px solid transparent;border-top:6px solid var(--ink-3);border-bottom:0}
-.vflow .loop{position:absolute;right:0;top:22px;bottom:22px;width:44px;height:calc(100% - 44px)}
+.varrow{height:15px;position:relative}
+.varrow::before{content:"";position:absolute;left:calc(50% - 1px);top:0;bottom:6px;border-left:2.5px solid var(--ink-2)}
+.varrow::after{content:"";position:absolute;left:calc(50% - 6px);bottom:0;border:6px solid transparent;border-top:7px solid var(--ink-2);border-bottom:0}
+.vflow .loop{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 .loop-lab{display:block;margin-top:8px;text-align:right;font:600 12px var(--mono);letter-spacing:.06em;color:var(--slate)}
 </style>
 </head>
@@ -424,7 +424,7 @@ table.t td{padding:9px 10px;line-height:1.4}
   <div class="eyebrow rv" style="--i:0">09 · If anticoagulation continues</div>
   <h2 class="rv" style="--i:1">Continuing is a plan too: <em>agent, route, reversal</em></h2>
   <div style="display:grid;grid-template-columns:600px 1fr;gap:34px;margin-top:16px;align-items:start">
-    <div><div class="vflow"><div class="vstep a-start pop" style="--i:0"><span class="ak">1 · Restate</span><span>Restate the indication and estimate prognosis: weigh expected time-to-benefit against immediate time-to-harm</span></div><div class="varrow"></div><div class="vstep a-step pop" style="--i:1"><span class="ak">2 · Goals</span><span>Clarify goals of care with the patient and family, including place of care</span></div><div class="varrow"></div><div class="vstep a-stop pop" style="--i:2"><span class="ak">3 · Contraindications</span><span>None present: active bleeding or severe coagulopathy; severe hepato-renal failure. CNS disease or severe thrombocytopenia also raise bleeding risk</span></div><div class="varrow"></div><div class="vstep a-step pop" style="--i:3"><span class="ak">4 · Modifiable risk</span><span>Address modifiable bleeding risk factors</span></div><div class="varrow"></div><div class="vstep a-agent pop" style="--i:4"><span class="ak">5 · Agent</span><span>Choose the anticoagulant for the indication, a short horizon and the route</span></div><div class="varrow"></div><div class="vstep a-doc pop" style="--i:5"><span class="ak">6 · Reassess</span><span>Reassess continuously, especially when care transfers between teams; revisit patient and family goals</span></div><svg class="loop" viewBox="0 0 40 100" preserveAspectRatio="none" aria-hidden="true"><path class="draw" style="--i:6;--len:400" d="M4 96 H30 V4 H8" fill="none" stroke="var(--slate)" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg></div><span class="loop-lab">↺ loop back to step 1 at every change in condition or care setting</span></div>
+    <div><div class="vflow"><div class="vstep a-start pop" style="--i:0"><span class="ak">1 · Restate</span><span>Restate the indication and estimate prognosis: weigh expected time-to-benefit against immediate time-to-harm</span></div><div class="varrow"></div><div class="vstep a-step pop" style="--i:1"><span class="ak">2 · Goals</span><span>Clarify goals of care with the patient and family, including place of care</span></div><div class="varrow"></div><div class="vstep a-stop pop" style="--i:2"><span class="ak">3 · Contraindications</span><span>None present: active bleeding or severe coagulopathy; severe hepato-renal failure. CNS disease or severe thrombocytopenia also raise bleeding risk</span></div><div class="varrow"></div><div class="vstep a-step pop" style="--i:3"><span class="ak">4 · Modifiable risk</span><span>Address modifiable bleeding risk factors</span></div><div class="varrow"></div><div class="vstep a-agent pop" style="--i:4"><span class="ak">5 · Agent</span><span>Choose the anticoagulant for the indication, a short horizon and the route</span></div><div class="varrow"></div><div class="vstep a-doc pop" style="--i:5"><span class="ak">6 · Reassess</span><span>Reassess continuously, especially when care transfers between teams; revisit patient and family goals</span></div><svg class="loop" aria-hidden="true"><defs><marker id="loopHead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--slate)"/></marker></defs><path class="draw loop-path" style="--i:6" fill="none" stroke="var(--slate)" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#loopHead)"/></svg></div><span class="loop-lab">↺ loop back to step 1 at every change in condition or care setting</span></div>
     <table class="t rv" style="--i:3;font-size:15.5px">
       <tr><th>Situation</th><th>Practical point</th></tr>
       <tr><td><b>Warfarin</b></td><td>Avoid where possible: interactions, monitoring burden, a labile INR as intake falls</td></tr>
@@ -732,6 +732,19 @@ table.t td{padding:9px 10px;line-height:1.4}
       `<text x="${cx}" y="${cy+16}" text-anchor="middle" font-size="13.5" fill="${own?'var(--stage)':'var(--ink-3)'}">${n[1]}</text></g>`;});
   document.getElementById('spokes').innerHTML=sp; document.getElementById('nodes').innerHTML=nd;
 
+  /* loop arrow on the 'if continuing' flow: from step 6's right edge, up, into step 1 */
+  function drawLoops(){
+    document.querySelectorAll('.vflow').forEach(v=>{
+      const st=v.querySelectorAll('.vstep'); if(st.length<2)return;
+      const a=st[0], b=st[st.length-1], svg=v.querySelector('svg.loop'), path=svg.querySelector('.loop-path');
+      const right=a.offsetLeft+a.offsetWidth, x=right+26;
+      const y1=a.offsetTop+a.offsetHeight/2, y2=b.offsetTop+b.offsetHeight/2;
+      svg.setAttribute('viewBox','0 0 '+v.clientWidth+' '+v.clientHeight);
+      path.setAttribute('d','M'+right+' '+y2+' H'+x+' V'+y1+' H'+(right+3));
+      path.style.setProperty('--len',Math.ceil(2*(x-right)+(y2-y1)+10));
+    });
+  }
+  drawLoops(); if(document.fonts&&document.fonts.ready)document.fonts.ready.then(drawLoops);
   window.addEventListener('resize',fit);
   if(window.ResizeObserver)new ResizeObserver(fit).observe(vp);
   fit();
